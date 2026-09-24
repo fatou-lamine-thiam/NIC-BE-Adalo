@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bureaux d'enregistrement - .SN</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="bureaux-section">
+
+    <header class="header">
+      <div class="badge">🏢 Partenaires officiels</div>
+
+      <h1>Bureaux d'enregistrement</h1>
+
+      <p>
+        Contactez un BE pour poursuivre la procédure d'enregistrement
+        de votre nom de domaine
+      </p>
+
+      <span id="counter">Chargement...</span>
+    </header>
+
+    <div class="search-container">
+      <input
+        type="text"
+        id="search"
+        placeholder="Recherchez par nom, ville ou pays..."
+      >
+    </div>
+
+    <div class="table-container">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Bureau</th>
+            <th>Ville</th>
+            <th>Pays</th>
+            <th>Site Web</th>
+            <th>Téléphone</th>
+          </tr>
+        </thead>
+
+        <tbody id="bureaux-list">
+          <tr>
+            <td colspan="5" class="loading">
+              Chargement des bureaux...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="pagination">
+      <button id="previous">‹ Précédent</button>
+
+      <span id="page-info">Page 1</span>
+
+      <button id="next">Suivant ›</button>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
