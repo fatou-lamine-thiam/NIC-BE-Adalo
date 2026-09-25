@@ -53,7 +53,6 @@ async function loadBureaux() {
 }
 
 function renderBureaux() {
-
   const totalPages = Math.max(
     1,
     Math.ceil(filtered.length / PAGE_SIZE)
@@ -63,6 +62,94 @@ function renderBureaux() {
     currentPage = totalPages;
   }
 
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const end = start + PAGE_SIZE;
+
+  const paginated = filtered.slice(start, end);
+
+  counter.textContent =
+    `${filtered.length} bureau${filtered.length > 1 ? "x" : ""} accrédité${filtered.length > 1 ? "s" : ""}`;
+
+  pageInfo.textContent =
+    `Page ${currentPage} / ${totalPages}`;
+
+  previousButton.disabled = currentPage === 1;
+  nextButton.disabled = currentPage === totalPages;
+
+  if (paginated.length === 0) {
+    bureauxList.innerHTML = `
+      <div class="empty">
+        Aucun bureau trouvé.
+      </div>
+    `;
+    return;
+  }
+
+  bureauxList.innerHTML = paginated.map(bureau => {
+    let website = bureau.site_web || "";
+
+    if (
+      website &&
+      !website.startsWith("http://") &&
+      !website.startsWith("https://")
+    ) {
+      website = `https://${website}`;
+    }
+
+    return `
+      <article class="bureau-card">
+
+        <h2 class="bureau-card-name">
+          ${escapeHtml(bureau.nom || "-")}
+        </h2>
+
+        <div class="bureau-card-info">
+
+          <div class="info-row">
+            <span class="info-label">Ville</span>
+            <span class="info-value">
+              ${escapeHtml(bureau.ville || "-")}
+            </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Pays</span>
+            <span class="info-value">
+              ${escapeHtml(bureau.pays || "-")}
+            </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Site Web</span>
+            <span class="info-value">
+              ${
+                website
+                  ? `<a
+                      href="${escapeAttribute(website)}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="website"
+                    >
+                      Visiter le site
+                    </a>`
+                  : "-"
+              }
+            </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Téléphone</span>
+            <span class="info-value">
+              ${escapeHtml(bureau.telephone || "-")}
+            </span>
+          </div>
+
+        </div>
+
+      </article>
+    `;
+  }).join("");
+}
   const start = (currentPage - 1) * PAGE_SIZE;
   const end = start + PAGE_SIZE;
 
