@@ -453,3 +453,154 @@ tbody tr:hover {
     font-size: 11px;
   }
 }
+/* =========================
+   CARTES BUREAUX
+========================= */
+
+.bureaux-list {
+  width: 100%;
+}
+
+.bureau-card {
+  width: 100%;
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+}
+
+.bureau-card-name {
+  margin: 0 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #edf0f3;
+  color: #172033;
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.bureau-card-info {
+  width: 100%;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 6px 0;
+}
+
+.info-label {
+  flex-shrink: 0;
+  color: #8a8f98;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.info-value {
+  min-width: 0;
+  color: #374151;
+  font-size: 12px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.info-value .website {
+  color: #16834b;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.info-value .website:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+
+  .bureaux-section {
+    padding: 18px 12px 25px;
+  }
+
+  .header h1 {
+    font-size: 25px;
+    line-height: 1.15;
+  }
+
+  .header p {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .search-container {
+    margin-bottom: 16px;
+  }
+
+  #search {
+    height: 42px;
+    font-size: 12px;
+  }
+
+  .bureau-card {
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 9px;
+  }
+
+  .bureau-card-name {
+    font-size: 13px;
+    margin-bottom: 10px;
+    padding-bottom: 9px;
+  }
+
+  .info-row {
+    gap: 10px;
+    padding: 4px 0;
+  }
+
+  .info-label {
+    font-size: 9px;
+  }
+
+  .info-value {
+    font-size: 11px;
+  }
+
+  .pagination button {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  #page-info {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+
+  .bureaux-section {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+  }
+
+  .bureau-card {
+    padding: 12px;
+  }
+
+  .bureau-card-name {
+    font-size: 12px;
+  }
+
+  .info-label {
+    font-size: 8px;
+  }
+
+  .info-value {
+    font-size: 10px;
+  }
+}
