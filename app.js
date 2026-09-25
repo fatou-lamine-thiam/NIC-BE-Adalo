@@ -14,21 +14,23 @@ const previousButton = document.getElementById("previous");
 const nextButton = document.getElementById("next");
 const pageInfo = document.getElementById("page-info");
 
-
 async function loadBureaux() {
   try {
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/bureaux_enregistrement?select=nom,ville,pays,site_web,telephone&actif=eq.true&order=nom.asc`,
-      {
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`
-        }
+    const url =
+      `${SUPABASE_URL}/rest/v1/bureaux_enregistrement` +
+      `?select=nom,ville,pays,site_web,telephone` +
+      `&actif=eq.true` +
+      `&order=nom.asc`;
+
+    const response = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`
       }
-    );
+    });
 
     if (!response.ok) {
-      throw new Error("Erreur lors du chargement des bureaux.");
+      throw new Error(`Supabase HTTP ${response.status}`);
     }
 
     bureaux = await response.json();
@@ -38,21 +40,23 @@ async function loadBureaux() {
     renderBureaux();
 
   } catch (error) {
-    console.error(error);
+    console.error("Erreur bureaux :", error);
 
-    bureauxList.innerHTML = `
-      <div class="empty">
-        Impossible de charger les bureaux d'enregistrement.
-      </div>
-    `;
+    if (bureauxList) {
+      bureauxList.innerHTML = `
+        <div class="empty">
+          Impossible de charger les bureaux d'enregistrement.
+        </div>
+      `;
+    }
 
-    counter.textContent = "Erreur de chargement";
+    if (counter) {
+      counter.textContent = "Erreur de chargement";
+    }
   }
 }
 
-
 function renderBureaux() {
-
   const totalPages = Math.max(
     1,
     Math.ceil(filtered.length / PAGE_SIZE)
@@ -63,9 +67,7 @@ function renderBureaux() {
   }
 
   const start = (currentPage - 1) * PAGE_SIZE;
-  const end = start + PAGE_SIZE;
-
-  const paginated = filtered.slice(start, end);
+  const paginated = filtered.slice(start, start + PAGE_SIZE);
 
   counter.textContent =
     `${filtered.length} bureau${filtered.length > 1 ? "x" : ""} accrédité${filtered.length > 1 ? "s" : ""}`;
@@ -76,20 +78,16 @@ function renderBureaux() {
   previousButton.disabled = currentPage === 1;
   nextButton.disabled = currentPage === totalPages;
 
-
   if (paginated.length === 0) {
-
     bureauxList.innerHTML = `
       <div class="empty">
         Aucun bureau trouvé.
       </div>
     `;
-
     return;
   }
 
-
-  bureauxList.innerHTML = paginated.map(bureau => {
+  bureauxList.innerHTML = paginated.map(function (bureau) {
 
     let website = bureau.site_web || "";
 
@@ -101,7 +99,6 @@ function renderBureaux() {
       website = `https://${website}`;
     }
 
-
     return `
       <article class="bureau-card">
 
@@ -112,63 +109,40 @@ function renderBureaux() {
         <div class="bureau-card-info">
 
           <div class="info-row">
-            <span class="info-label">
-              Ville
-            </span>
-
+            <span class="info-label">Ville</span>
             <span class="info-value">
               ${escapeHtml(bureau.ville || "-")}
             </span>
           </div>
 
-
           <div class="info-row">
-            <span class="info-label">
-              Pays
-            </span>
-
+            <span class="info-label">Pays</span>
             <span class="info-value">
               ${escapeHtml(bureau.pays || "-")}
             </span>
           </div>
 
-
           <div class="info-row">
-            <span class="info-label">
-              Site Web
-            </span>
-
+            <span class="info-label">Site Web</span>
             <span class="info-value">
-
               ${
                 website
-                  ? `
-                    <a
+                  ? `<a
                       href="${escapeAttribute(website)}"
                       target="_blank"
                       rel="noopener noreferrer"
                       class="website"
-                    >
-                      Visiter le site
-                    </a>
-                  `
+                    >Visiter le site</a>`
                   : "-"
               }
-
             </span>
           </div>
 
-
           <div class="info-row">
-
-            <span class="info-label">
-              Téléphone
-            </span>
-
+            <span class="info-label">Téléphone</span>
             <span class="info-value">
               ${escapeHtml(bureau.telephone || "-")}
             </span>
-
           </div>
 
         </div>
@@ -179,87 +153,58 @@ function renderBureaux() {
   }).join("");
 }
 
-
 searchInput.addEventListener("input", function () {
+  const query = this.value.trim().toLowerCase();
 
-  const query = this.value
-    .trim()
-    .toLowerCase();
+  filtered = bureaux.filter(function (bureau) {
 
-  filtered = bureaux.filter(bureau => {
-
-    const nom =
-      (bureau.nom || "").toLowerCase();
-
-    const ville =
-      (bureau.ville || "").toLowerCase();
-
-    const pays =
-      (bureau.pays || "").toLowerCase();
+    const nom = (bureau.nom || "").toLowerCase();
+    const ville = (bureau.ville || "").toLowerCase();
+    const pays = (bureau.pays || "").toLowerCase();
 
     return (
       nom.includes(query) ||
       ville.includes(query) ||
       pays.includes(query)
     );
-
   });
 
   currentPage = 1;
-
   renderBureaux();
-
 });
-
 
 previousButton.addEventListener("click", function () {
-
   if (currentPage > 1) {
-
     currentPage--;
-
     renderBureaux();
-
   }
-
 });
-
 
 nextButton.addEventListener("click", function () {
-
-  const totalPages =
-    Math.ceil(filtered.length / PAGE_SIZE);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filtered.length / PAGE_SIZE)
+  );
 
   if (currentPage < totalPages) {
-
     currentPage++;
-
     renderBureaux();
-
   }
-
 });
 
-
 function escapeHtml(value) {
-
   return String(value)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-
 }
 
-
 function escapeAttribute(value) {
-
   return String(value)
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-
 }
-
 
 loadBureaux();
