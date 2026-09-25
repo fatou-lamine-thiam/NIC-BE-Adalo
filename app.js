@@ -116,11 +116,29 @@ function renderBureaux() {
           </div>
 
           <div class="info-row">
-            <span class="info-label">Pays</span>
-            <span class="info-value">
-              ${escapeHtml(bureau.pays || "-")}
-            </span>
-          </div>
+
+  <span class="info-label">
+    Téléphone
+  </span>
+
+  <span class="info-value">
+
+    ${
+      bureau.telephone
+        ? `
+          <a
+            href="tel:${escapeAttribute(bureau.telephone)}"
+            class="phone-link"
+          >
+            ${escapeHtml(bureau.telephone)}
+          </a>
+        `
+        : "-"
+    }
+
+  </span>
+
+</div>
 
           <div class="info-row">
             <span class="info-label">Site Web</span>
